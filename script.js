@@ -9,6 +9,26 @@ async function main(e){
     buildDisplayCards(hand);
 }
 
+async function getOne(e){
+    e.preventDefault();
+    let name=document.getElementById("oneInput").value;
+    const cardDB=await apiCall();
+    hand = cardDB.filter(element =>{
+       return element.Title.toLowerCase() == name.toLowerCase();
+    })
+    buildDisplayCards(hand);
+}
+
+async function getJSON(e){
+    e.preventDefault();
+    let name=document.getElementById("JSONInput").value;
+    const cardDB=await apiCall();
+    hand = cardDB.filter(element =>{
+       return element.Title.toLowerCase() == name.toLowerCase();
+    })
+    displayJSON(hand);
+}
+
 async function parseText(){
     //let matchStatus="(\| [A-Za-z ]+\([ADU]\:[12]\))g";
     let matchStatus=/([\|][ ][A-Za-z ]+[\(][ADU][\:][12][\)])/g;
@@ -30,7 +50,29 @@ async function showHand(){
 }
 
 async function buildDisplayCards(hand){
+    let html;
     hand.forEach(card =>{
+        html="";
+        let entry = document.createElement("li");
+        entry.className = "card blue-grey white-text";
+        //entry.innerHTML = JSON.stringify(card);
+        html=card.Title + "<br />";
+        html+= card.Description + "<br />";
+        html+= "Cost: " + card.Data.cost + "<br />";
+        html+= "Damage: " + card.Data.damage + "<br />";
+        html+= "Facedown? " + card.Data.facedown + "<br />";
+        html+= "Hits: " + card.Data.hits + "<br />";
+        html+= "<br />";
+        entry.innerHTML = html;
+        let div = document.getElementById("hand");
+        div.appendChild(entry);
+    })
+}
+
+async function displayJSON(hand){
+    let html;
+    hand.forEach(card =>{
+        html="";
         let entry = document.createElement("li");
         entry.className = "card blue-grey white-text";
         entry.innerHTML = JSON.stringify(card);
